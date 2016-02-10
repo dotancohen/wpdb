@@ -3,16 +3,17 @@
 import os
 import re
 import sys
+import datetime
 
 
 
-def main(connect):
+def main(connect, dump):
 
 	current_path = os.getcwd()
 	config_file = get_config_file(current_path)
 
 	mysql_connection = get_mysql_connection(config_file)
-	conn_str = get_mysql_connection_string(mysql_connection)
+	conn_str = get_mysql_connection_string(mysql_connection, dump)
 
 	if connect:
 		os.system(conn_str)
@@ -53,18 +54,29 @@ def get_mysql_connection(config_file):
 
 
 
-def get_mysql_connection_string(conn):
+def get_mysql_connection_string(conn, dump):
 
 	if not 'DB_USER' in conn.keys() or not 'DB_PASSWORD' in conn.keys():
 		return None
 
-	conn_str = 'mysql -u"%s" -p"%s"' % (conn['DB_USER'], conn['DB_PASSWORD'], )
+	ifdump = ''
+	if dump:
+		ifdump='dump'
+
+	conn_str = 'mysql%s -u"%s" -p"%s"' % (ifdump, conn['DB_USER'], conn['DB_PASSWORD'], )
 
 	if 'DB_HOST' in conn.keys():
 		conn_str += ' -h"%s"' % (conn['DB_HOST'], )
 
 	if 'DB_NAME' in conn.keys():
 		conn_str += ' %s' % (conn['DB_NAME'], )
+		db_name = conn['DB_NAME']
+	else:
+		db_name = 'wordpress'
+
+	if dump:
+		timestring = str(datetime.datetime.now().strftime('%Y-%m-%d_%H%M'))
+		conn_str += ' > %s_%s.sql' % (db_name, timestring,)
 
 	return conn_str
 
@@ -73,8 +85,13 @@ def get_mysql_connection_string(conn):
 if __name__=='__main__':
 
 	connect = False
+	dump = False
+
 	if 1 < len(sys.argv) and sys.argv[1] in ['c', 'C', '-c', '-C']:
 		connect = True
 
-	main(connect)
+	if 1 < len(sys.argv) and sys.argv[1] in ['d', 'D', '-d', '-D']:
+		dump = True
+
+	main(connect, dump)
 
