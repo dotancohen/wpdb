@@ -1,0 +1,68 @@
+#!/usr/bin/python3
+
+import os
+import re
+
+
+
+def main():
+
+	current_path = os.getcwd()
+	config_file = get_config_file(current_path)
+
+	mysql_connection = get_mysql_connection(config_file)
+	conn_str = get_mysql_connection_string(mysql_connection)
+
+	print(conn_str)
+
+	return True
+
+
+
+def get_config_file(initial_path, filename='wp-config.php'):
+
+	while not os.path.isfile( os.path.join(initial_path, filename) ):
+		initial_path = initial_path.rsplit('/', 1)[0]
+		if initial_path=='':
+			return None
+
+	return os.path.join(initial_path, filename)
+
+
+def get_mysql_connection(config_file):
+
+	mysql_connection = {}
+	reg = re.compile(r'.*define.*\(\w*[\'"](.*?)[\'"], *[\'"](.*?)[\'"]\w*\).*')
+
+	with open(config_file, 'r') as infile:
+		for line in infile:
+			if 'DB_' in line:
+				pair = reg.search(line)
+				if 'groups' in dir(pair):
+					key = pair.groups()[0]
+					value = pair.groups()[1]
+					mysql_connection[key] = value
+
+	return mysql_connection
+
+
+
+def get_mysql_connection_string(conn):
+
+	if not 'DB_USER' in conn.keys() or not 'DB_PASSWORD' in conn.keys():
+		return None
+
+	conn_str = 'mysql -u"%s" -p"%s"' % (conn['DB_USER'], conn['DB_PASSWORD'], )
+
+	if 'DB_HOST' in conn.keys():
+		conn_str += ' -h"%s"' % (conn['DB_HOST'], )
+
+	if 'DB_NAME' in conn.keys():
+		conn_str += ' %s' % (conn['DB_NAME'], )
+
+	return conn_str
+
+
+
+if __name__=='__main__':
+	main()
