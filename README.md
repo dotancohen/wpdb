@@ -17,7 +17,7 @@ Finds the wp-config.php file from any directory in the Wordpress hierarchy:
 
 	$
 
-Supports optionally connecting directly:
+Supports optionally connecting to MySQL directly:
 
 	$ wpdb -c
 	Welcome to the MySQL monitor.  Commands end with ; or \g.
