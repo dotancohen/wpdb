@@ -11,6 +11,28 @@ Finds the wp-config.php file from any directory in the Wordpress hierarchy:
 
 	$ pwd
 	/var/www/wordpress/public_html/wp-content/themes
+
 	$ wpdb
 	mysql -u"AzureDiamond" -p"hunter2" -h"localhost" some_db
+
+	$
+
+Supports optionally connecting directly:
+
+	$ wpdb -c
+	Welcome to the MySQL monitor.  Commands end with ; or \g.
+	mysql> SELECT COUNT(*) FROM wp_posts;
+	+----------+
+	| COUNT(*) |
+	+----------+
+	|      351 |
+	+----------+
+	1 row in set (0.01 sec)
+
+Supports returning a mysqldump string, complete with suggested time-based filename:
+
+	$ wpdb -d
+	mysqldump -u"AzureDiamond" -p"hunter2" -h"localhost" some_db --skip-opt > some_db_2016-02-10_1602.sql
+
+	$
 
