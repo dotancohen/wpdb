@@ -19,12 +19,16 @@ def main(connect, dump):
 		return False
 
 	mysql_connection = get_mysql_connection(config_file)
-
 	conn_str = get_mysql_connection_string(mysql_connection, dump)
+
+	if conn_str == None:
+		print('Cannot parse wp-config.php file for DB User and Password!')
+		print('Please check the file and try again!')
+		print('File used: %s' % (config_file,))
+		return False
 
 	if connect:
 		os.system(conn_str)
-
 	else:
 		print(conn_str)
 
