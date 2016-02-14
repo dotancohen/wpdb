@@ -12,7 +12,14 @@ def main(connect, dump):
 	current_path = os.getcwd()
 	config_file = get_config_file(current_path)
 
+	if config_file == None:
+		print('Cannot locate wp-config.php file!')
+		print('Are you sure that you are in a Wordpress directory structure?')
+		print('CWD: %s' % (current_path,))
+		return False
+
 	mysql_connection = get_mysql_connection(config_file)
+
 	conn_str = get_mysql_connection_string(mysql_connection, dump)
 
 	if connect:
