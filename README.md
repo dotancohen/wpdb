@@ -13,7 +13,7 @@ Finds the wp-config.php file from any directory in the Wordpress hierarchy:
 	/var/www/wordpress/public_html/wp-content/themes
 
 	$ wpdb
-	mysql -u"AzureDiamond" -p"hunter2" -h"localhost" some_db
+	mysql -h'localhost' -u'AzureDiamond' -p'hunter2' some_db
 
 	$
 
@@ -32,7 +32,7 @@ Supports optionally connecting to MySQL directly:
 Supports returning a mysqldump string, complete with suggested time-based filename:
 
 	$ wpdb -d
-	mysqldump -u"AzureDiamond" -p"hunter2" -h"localhost" some_db --skip-opt > some_db_2016-02-10_1602.sql
+	mysqldump -h'localhost' -u'AzureDiamond' -p'hunter2' some_db --skip-opt > some_db_2016-02-10_1602.sql
 
 	$
 
