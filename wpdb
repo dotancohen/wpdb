@@ -74,13 +74,15 @@ def get_mysql_connection_string(conn, dump):
 		return None
 
 	ifdump = ''
-	if dump:
+	if dump!=False:
 		ifdump='dump'
 
-	conn_str = 'mysql%s -u"%s" -p"%s"' % (ifdump, conn['DB_USER'], conn['DB_PASSWORD'], )
-
 	if 'DB_HOST' in conn.keys():
-		conn_str += ' -h"%s"' % (conn['DB_HOST'], )
+		host = ' -h"%s"' % (conn['DB_HOST'], )
+	else:
+		host = ''
+
+	conn_str = 'mysql%s%s -u"%s" -p"%s"' % (ifdump, host, conn['DB_USER'], conn['DB_PASSWORD'], )
 
 	if 'DB_NAME' in conn.keys():
 		conn_str += ' %s' % (conn['DB_NAME'], )
@@ -88,7 +90,7 @@ def get_mysql_connection_string(conn, dump):
 	else:
 		db_name = 'wordpress'
 
-	if dump:
+	if dump!=False:
 		timestring = str(datetime.datetime.now().strftime('%Y-%m-%d_%H%M'))
 		conn_str += '%s > %s_%s.sql' % (skipopt, db_name, timestring,)
 
@@ -106,6 +108,9 @@ if __name__=='__main__':
 
 	if 1 < len(sys.argv) and sys.argv[1] in ['d', 'D', '-d', '-D']:
 		dump = True
+
+	if 1 < len(sys.argv) and sys.argv[1] in ['dd', 'DD', '-dd', '-DD']:
+		dump = 'separate_pass'
 
 	main(connect, dump)
 
