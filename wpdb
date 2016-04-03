@@ -67,31 +67,31 @@ def get_mysql_connection(config_file):
 
 def get_mysql_connection_string(conn, dump):
 
-	#skipopt = ''
-	skipopt = ' --skip-opt' # Force rows to separate INSERT statements, great for versioning.
+	#skipopt = ""
+	skipopt = " --skip-opt" # Force rows to separate INSERT statements, great for versioning.
 
 	if not 'DB_USER' in conn.keys() or not 'DB_PASSWORD' in conn.keys():
 		return None
 
-	ifdump = ''
+	ifdump = ""
 	if dump!=False:
-		ifdump='dump'
+		ifdump="dump"
 
-	host = ''
+	host = ""
 	if 'DB_HOST' in conn.keys():
-		host = ' -h"%s"' % (conn['DB_HOST'], )
+		host = " -h'%s'" % (conn['DB_HOST'], )
 
-	conn_str = 'mysql%s%s -u"%s" -p"%s"' % (ifdump, host, conn['DB_USER'], conn['DB_PASSWORD'], )
+	conn_str = "mysql%s%s -u'%s' -p'%s'" % (ifdump, host, conn['DB_USER'], conn['DB_PASSWORD'], )
 
 	if 'DB_NAME' in conn.keys():
-		conn_str += ' %s' % (conn['DB_NAME'], )
+		conn_str += " %s" % (conn['DB_NAME'], )
 		db_name = conn['DB_NAME']
 	else:
-		db_name = 'wordpress'
+		db_name = "wordpress"
 
 	if dump!=False:
-		timestring = str(datetime.datetime.now().strftime('%Y-%m-%d_%H%M'))
-		conn_str += '%s > %s_%s.sql' % (skipopt, db_name, timestring,)
+		timestring = str(datetime.datetime.now().strftime("%Y-%m-%d_%H%M"))
+		conn_str += "%s > %s_%s.sql" % (skipopt, db_name, timestring,)
 
 	return conn_str
 
@@ -109,7 +109,7 @@ if __name__=='__main__':
 		dump = True
 
 	if 1 < len(sys.argv) and sys.argv[1] in ['dd', 'DD', '-dd', '-DD']:
-		dump = 'separate_pass'
+		dump = "separate_pass"
 
 	main(connect, dump)
 
