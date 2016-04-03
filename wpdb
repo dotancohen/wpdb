@@ -77,10 +77,9 @@ def get_mysql_connection_string(conn, dump):
 	if dump!=False:
 		ifdump='dump'
 
+	host = ''
 	if 'DB_HOST' in conn.keys():
 		host = ' -h"%s"' % (conn['DB_HOST'], )
-	else:
-		host = ''
 
 	conn_str = 'mysql%s%s -u"%s" -p"%s"' % (ifdump, host, conn['DB_USER'], conn['DB_PASSWORD'], )
 
